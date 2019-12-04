@@ -94,3 +94,73 @@ cap.release()
 out.release()
 cv2.destroyAllWindows()
 ```
+# Day 3
+Let's we explore more about opencv.
+## 1.Color Filtering
+  Color of the image can be change using cv2.cvtColor() like bgr to gray, bgr to rgb, bgr to hsv etc.
+  ```
+  import cv2
+  import numpy as np
+  
+  img=cv2.imread("Baby.jpg")
+  gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+  # gray contains gray version of original image
+  
+  kernel = np.ones((5,5),np.float32)/25
+  dst = cv2.filter2D(img,-1,kernel)
+  # Filter2D - To convolve kernel with an image
+  
+  cv2.imshow("Gray_image",gray)
+  cv2.imshow("Filter",dst)
+  ```
+Run the Color_Filter.py to see the filtering of color.  
+## 2.Blurring and Smoothing 
+   There are many blurring and smoothing techniques.
+* **Averaging:**
+It convolves the image with normalised box filter. It takes the average of all pixels under the kernel and replace the central area with the average.
+```
+img=cv2.imread("Baby.jpg")
+blur=cv2.blur(img,(3,3))
+cv2.imshow("Blur",blur)
+```
+* **Gaussian Filtering:**
+It uses Gaussian kernel.To create a Gaussian kernel,use cv2.getGaussianKernel().
+```
+img=cv2.imread("Baby.jpg")
+
+#GaussianBlur sacrifies a lot of granularity
+blur=cv2.GaussianBlur(img,(15,15),0)
+cv2.imshow("Blur",blur)
+```
+* **Median Filtering:**
+The function cv2.medianBlur() computes the median of all the pixels under the kernel window and the central pixel is replaced with this median value.
+```
+img=cv2.imread("Baby.jpg")
+blur=cv2.medianBlur(img,3)
+#Reduces the noise effectively.
+cv2.imshow("Blur",blur)
+```
+* **Bilateral Filtering:**
+It is highly effective at noise removal while preserving edges.
+```
+img=cv2.imread("Baby.jpg")
+blur=cv2.bilateralFilter(img,9,75,75)
+#Texture on the surface is gone, but edges are still preserved.
+cv2.imshow("Blur",blur)
+```
+## 3.Thresholding:
+If pixel value is greater than a threshold value, it is assigned one value (may be white), else it is assigned another value (may be black). The function used is cv2.threshold.
+Download Thresh.py and run it for thresholding.
+```
+#Adaptive threshold is another type of threaholding.
+img = cv2.imread('Baby.jpg',0)
+th1 = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY,11,2)
+th2 = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,11,2)
+```
+## 4.Canny Edge Detection:
+The first step in Edge detection is to remove the noise in the image with a 5x5 Gaussian filter.
+```
+img = cv2.imread('Baby.jpg',0)
+blur=cv2.GaussianBlur(img,(15,15),0)
+edges = cv2.Canny(blur,100,200)
+```
