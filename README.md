@@ -164,3 +164,40 @@ img = cv2.imread('Baby.jpg',0)
 blur=cv2.GaussianBlur(img,(15,15),0)
 edges = cv2.Canny(blur,100,200)
 ```
+# Day 4
+## 1.Morphological operations:
+Morphological operations are a set of operations that process images based on shapes. They apply a structuring element to an input image and generate an output image.
+The most basic morphological operations are two: 
+* **Erosion**
+It erodes away the boundaries of foreground object.
+* **Dilation**
+It increases the white region in the image or size of foreground object increases
+```
+import cv2
+import numpy as np
+img=cv2.imread("Baby.jpg",0)
+kernel=np.ones((5,5),np.uint8)
+# kernel has 5x5 matrix of 1
+img_erode=cv2.erode(img,kernel,iterations=1)
+img_dilate=cv2.dilate(img,kernel,iterations=1)
+# Iterations determine how much we erode or dilate
+cv2.imshow("Erosion",img_erode)
+cv2.imshow("Dilation",img_dilate)
+```
+## 2.Contours:
+A curve that joins all continuous points having same color or intensity.
+```
+import cv2
+import numpy as np
+img=cv2.imread("Baby.jpg",0)
+thresh=cv2.threshold(img,0,255,cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+# Binary image will be useful to find contours
+
+cnt=cv2.findContours(thresh,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)[0]
+# cv2.CHAIN_APPROX_SIMPLE - Get only corner points
+# cv2.CHAIN_APPROX_NONE - Get all boundary points
+
+# To draw all the contours in an image:
+cv2.drawContours(img, cnt, -1, (0,255,0), 3)
+cv2.imshow("contour",img)
+```
