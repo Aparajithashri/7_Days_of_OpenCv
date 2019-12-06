@@ -201,3 +201,42 @@ cnt=cv2.findContours(thresh,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)[0]
 cv2.drawContours(img, cnt, -1, (0,255,0), 3)
 cv2.imshow("contour",img)
 ```
+# Day 5
+## Face Detection
+Today we see face detection using haar-cascade.
+First we have to download a haar-cascade xml file.
+* [Frontal_face cascade](https://github.com/opencv/opencv/blob/master/data/haarcascades/haarcascade_frontalface_default.xml)
+* [Eye cascade](https://github.com/opencv/opencv/blob/master/data/haarcascades/haarcascade_eye.xml)
+```
+import numpy as np
+import cv2
+import matplotlib.pyplot as plt
+
+# Load xml classifier
+face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
+
+# Read the image and convert it to gray
+img = cv2.imread('babies.jpg')
+gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+
+# Detect faces in the image
+faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+
+# Draw rectangle over the face in the image
+for (x,y,w,h) in faces:
+    img = cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
+    roi_gray = gray[y:y+h, x:x+w]
+    roi_color = img[y:y+h, x:x+w]
+    # Detect eyes in the face
+    eyes = eye_cascade.detectMultiScale(roi_gray)
+    for (ex,ey,ew,eh) in eyes:
+        cv2.rectangle(roi_color,(ex,ey),(ex+ew,ey+eh),(0,255,0),2)
+
+# Display the image with face and eyes bounded by rectangle
+cv2.imshow("Babies",img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+```
+
+We can also create our own cascade classifier.
