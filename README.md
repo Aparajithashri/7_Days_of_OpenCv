@@ -240,3 +240,8 @@ cv2.destroyAllWindows()
 ```
 
 We can also create our own cascade classifier.
+# Day 6
+### Feature matching
+Today we gonna see feature matching using BFmatcher.
+
+Download and run the bfmatcher.py.
